@@ -1,9 +1,9 @@
-function forwardEulerScript
+function backwardEulerScript
 close
 y0 = 0.2;
 t0 = 0; tf = 20.;
 h = 0.1;
-[t, y] = forwardEuler(@logistics, t0, tf, y0, h);
+[t, y] = backwardEuler(@logistics, t0, tf, y0, h);
 plot(t, y)
 title('Solution of logistics equation, K=10, r=0.5')
 xlabel('time, t')
@@ -17,12 +17,16 @@ function yp = logistics(t,y)
     yp = r * (1 - y / K) * y;
 end
 
-function [t, y] = forwardEuler(f, t0, tf, y0, h)
+%buggy
+function [t, y] = backwardEuler(f, t0, tf, y0, h)
     t = t0:h:tf;
+    y = zeros(length(t));
     y(1) = y0;
+    t(1) = t0;
     n = 1;
     while t(n) < tf
-       y(n+1) = y(n) + (h * f(t(n), y(n)));
-       n = n + 1;
+       t(n+1) = t(n) + h;
+       y(n+1) = (y(n) + h * f(t(n+1, y(n+1))));
+       n = n+1;
     end
 end
